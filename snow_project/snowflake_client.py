@@ -1,5 +1,6 @@
 import os
 import snowflake.connector
+import pandas as pd
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -18,14 +19,11 @@ def get_connection():
     )
 
 
-def fetch_query(query: str):
-    """Execute a query and return results as a list of rows."""
+def fetch_dataframe(query: str):
+    """Run query and return a pandas DataFrame."""
     conn = get_connection()
-    cur = conn.cursor()
     try:
-        cur.execute(query)
-        results = cur.fetchall()
-        return results
+        df = pd.read_sql(query, conn)
+        return df
     finally:
-        cur.close()
         conn.close()

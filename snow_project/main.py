@@ -1,11 +1,9 @@
-from snowflake_client import fetch_query
+from snowflake_client import fetch_dataframe
 
 def main():
     query = "SELECT * FROM YOUR_TABLE LIMIT 10"
-    results = fetch_query(query)
-
-    for row in results:
-        print(row)
+    df = fetch_dataframe(query)
+    print(df)
 
 
 if __name__ == "__main__":
