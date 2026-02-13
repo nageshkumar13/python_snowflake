@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS AI.SUPPORT_TICKETS_ENRICHED (
     short_summary STRING,
 
     model STRING,
+    prompt_version STRING,
     enriched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
 
     PRIMARY KEY (ticket_id)

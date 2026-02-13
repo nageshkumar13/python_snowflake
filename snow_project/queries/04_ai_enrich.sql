@@ -6,13 +6,8 @@ USING (
         r.text_body,
 
         SNOWFLAKE.CORTEX.COMPLETE(
-            'mistral-large',
-            CONCAT(
-                'You are a classification AI. ',
-                'Extract JSON with keys: category, urgency, sentiment, short_summary. ',
-                'Return only JSON. Text: ',
-                r.text_body
-            )
+            ?,
+            ?
         ) AS ai_response
 
     FROM RAW.SUPPORT_TICKETS_RAW r
@@ -29,7 +24,8 @@ INSERT (
     urgency,
     sentiment,
     short_summary,
-    model
+    model,
+    prompt_version
 )
 VALUES (
     src.ticket_id,
@@ -40,5 +36,6 @@ VALUES (
     src.ai_response:"urgency"::STRING,
     src.ai_response:"sentiment"::STRING,
     src.ai_response:"short_summary"::STRING,
-    'mistral-large'
+    ?,
+    ?
 );
