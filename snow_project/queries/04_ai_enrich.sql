@@ -6,8 +6,8 @@ USING (
         r.text_body,
 
         SNOWFLAKE.CORTEX.COMPLETE(
-            ?,
-            ?
+            %s,
+            %s
         ) AS ai_response
 
     FROM RAW.SUPPORT_TICKETS_RAW r
@@ -31,11 +31,12 @@ VALUES (
     src.ticket_id,
     src.created_at,
     src.text_body,
-    src.ai_response,
-    src.ai_response:"category"::STRING,
-    src.ai_response:"urgency"::STRING,
-    src.ai_response:"sentiment"::STRING,
-    src.ai_response:"short_summary"::STRING,
-    ?,
-    ?
+    PARSE_JSON(src.ai_response),
+
+    PARSE_JSON(src.ai_response):"category"::STRING,
+    PARSE_JSON(src.ai_response):"urgency"::STRING,
+    PARSE_JSON(src.ai_response):"sentiment"::STRING,
+    PARSE_JSON(src.ai_response):"short_summary"::STRING,
+    %s,
+    %s
 );

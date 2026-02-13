@@ -36,7 +36,7 @@ def run_simple_sql(filename):
 def run_ai_enrichment():
     print("Running AI enrichment...")
 
-    model = "mistral-large"
+    model = "snowflake-arctic"
     prompt_version = "v1"
 
     prompt_template = load_prompt("ticket_enrichment_prompt.txt")
