@@ -1,5 +1,6 @@
 MERGE INTO AI.SUPPORT_TICKETS_ENRICHED target
 USING (
+
     SELECT
         r.ticket_id,
         r.created_at,
@@ -7,15 +8,35 @@ USING (
 
         SNOWFLAKE.CORTEX.COMPLETE(
             %s,
-            %s
-        ) AS ai_response
+            REPLACE(%s, '{{TEXT}}', r.text_body)
+        ) AS ai_raw,
+
+        TRY_PARSE_JSON(
+            SNOWFLAKE.CORTEX.COMPLETE(
+                %s,
+                REPLACE(%s, '{{TEXT}}', r.text_body)
+            )
+        ) AS ai_json
 
     FROM RAW.SUPPORT_TICKETS_RAW r
+
 ) src
+
 ON target.ticket_id = src.ticket_id
 
-WHEN NOT MATCHED THEN
-INSERT (
+WHEN MATCHED THEN UPDATE SET
+
+    ai_json        = src.ai_json,
+    category       = src.ai_json:"category"::STRING,
+    urgency        = src.ai_json:"urgency"::STRING,
+    sentiment      = src.ai_json:"sentiment"::STRING,
+    short_summary  = src.ai_json:"short_summary"::STRING,
+    model          = %s,
+    prompt_version = %s,
+    enriched_at    = CURRENT_TIMESTAMP()
+
+WHEN NOT MATCHED THEN INSERT (
+
     ticket_id,
     created_at,
     text_body,
@@ -25,18 +46,23 @@ INSERT (
     sentiment,
     short_summary,
     model,
-    prompt_version
+    prompt_version,
+    enriched_at
+
 )
+
 VALUES (
+
     src.ticket_id,
     src.created_at,
     src.text_body,
-    PARSE_JSON(src.ai_response),
-
-    PARSE_JSON(src.ai_response):"category"::STRING,
-    PARSE_JSON(src.ai_response):"urgency"::STRING,
-    PARSE_JSON(src.ai_response):"sentiment"::STRING,
-    PARSE_JSON(src.ai_response):"short_summary"::STRING,
+    src.ai_json,
+    src.ai_json:"category"::STRING,
+    src.ai_json:"urgency"::STRING,
+    src.ai_json:"sentiment"::STRING,
+    src.ai_json:"short_summary"::STRING,
     %s,
-    %s
+    %s,
+    CURRENT_TIMESTAMP()
+
 );

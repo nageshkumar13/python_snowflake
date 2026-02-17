@@ -32,7 +32,6 @@ def run_simple_sql(filename):
         conn.close()
 
 
-
 def run_ai_enrichment():
     print("Running AI enrichment...")
 
@@ -47,15 +46,20 @@ def run_ai_enrichment():
     try:
         enrich_sql = load_sql(AI_ENRICH_FILE)
 
-        # Replace placeholder at runtime
-        # We don't inject ticket text here — Snowflake does that per row
-        # So we pass the template and let SQL concatenate r.text_body
-        prompt_runtime = prompt_template.replace("{{TEXT}}", "' || r.text_body || '")
-
         cur.execute(
             enrich_sql,
-            (model, prompt_runtime, model, prompt_version)
+            (
+                model,
+                prompt_template,
+                model,
+                prompt_template,
+                model,
+                prompt_version,
+                model,
+                prompt_version
+            )
         )
+
     finally:
         cur.close()
         conn.close()
