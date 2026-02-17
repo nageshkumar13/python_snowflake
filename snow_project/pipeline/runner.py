@@ -47,18 +47,13 @@ def run_ai_enrichment():
         enrich_sql = load_sql(AI_ENRICH_FILE)
 
         cur.execute(
-            enrich_sql,
-            (
-                model,
-                prompt_template,
-                model,
-                prompt_template,
-                model,
-                prompt_version,
-                model,
-                prompt_version
-            )
-        )
+    enrich_sql,
+    {
+        "model": model,
+        "prompt": prompt_template,
+        "prompt_version": prompt_version
+    }
+)
 
     finally:
         cur.close()
