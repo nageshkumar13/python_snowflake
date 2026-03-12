@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS RAW.SUPPORT_TICKETS_RAW (
+    ticket_id STRING,
+    created_at TIMESTAMP,
+    source STRING,
+    text_body STRING,
+    ingested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP()
+);
