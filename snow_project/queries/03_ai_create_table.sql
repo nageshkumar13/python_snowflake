@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS AI.SUPPORT_TICKETS_ENRICHED (
+CREATE OR REPLACE TABLE AI.SUPPORT_TICKETS_ENRICHED (
     ticket_id STRING,
     created_at TIMESTAMP,
     text_body STRING,
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS AI.SUPPORT_TICKETS_ENRICHED (
     urgency STRING,
     sentiment STRING,
     short_summary STRING,
-
+    token_count INTEGER,
     model STRING,
     prompt_version STRING,
     enriched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),

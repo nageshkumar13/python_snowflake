@@ -35,7 +35,7 @@ def run_simple_sql(filename):
 def run_ai_enrichment():
     print("Running AI enrichment...")
 
-    model = "snowflake-arctic"
+    model = "snowflake-arctic"                   # Snowflake Cortex LLM used for AI enrichment
     prompt_version = "v1"
 
     prompt_template = load_prompt("ticket_enrichment_prompt.txt")
